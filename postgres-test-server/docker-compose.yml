@@ -1,0 +1,32 @@
+# docker-compose.yml
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    ports:
+      - "5432:5432"
+    user: 1000:1000
+    volumes:
+      - ./certs:/var/lib/postgresql/data/certs:ro
+      - ./config/postgresql.conf:/usr/local/share/postgresql/postgresql.conf:ro
+      - ./config/pg_hba.conf:/usr/local/share/postgresql/pg_hba.conf:ro
+      - ./pgdata:/var/lib/postgresql/data
+    command: postgres -c 'config_file=/usr/local/share/postgresql/postgresql.conf' -c 'hba_file=/usr/local/share/postgresql/pg_hba.conf'
+
+  client:
+    image: postgres:16
+    container_name: postgres-client
+    environment:
+      - PGPASSWORD=mysecretpassword
+    volumes:
+      - ./certs:/certs
+    user: 1000:1000
+    depends_on:
+      - db
+    command: >
+      sh -c "
+        sleep 5 &&
+        psql 'host=db port=5432 user=postgres dbname=postgres sslmode=verify-ca sslrootcert=/certs/ca.crt'
+      "
