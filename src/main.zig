@@ -1,7 +1,6 @@
 const std = @import("std");
 const TextFileReader = @import("textFileReader.zig").TextFileReader;
 const db = @import("db.zig");
-// const  = std.fs;
 const print = std.debug.print;
 
 pub const pg_stderr_tls = true;
@@ -20,9 +19,6 @@ pub fn main() !void {
         print("Usage: <program> <file>\n", .{});
         return;
     };
-
-    // const file = try std.fs.cwd().openFile(file_name, .{ .mode = .read_only });
-    // defer file.close();
 
     var tr = try TextFileReader.init(file_name, allocator, 1024);
     defer tr.deinit();
@@ -53,7 +49,6 @@ pub fn main() !void {
             db_pool.insert_record(.{ .service = service, .date = date, .start_time = start_time, .end_time = end_time, .usage = usage_int, .units = units }) catch {
                 print("Failed to insert record into database\n", .{});
             };
-
             continue;
         }
         if (std.mem.startsWith(u8, line, header)) {
@@ -61,12 +56,4 @@ pub fn main() !void {
             continue;
         }
     }
-}
-
-test "simple test" {
-    const gpa = std.testing.allocator;
-    var list: std.ArrayList(i32) = .empty;
-    defer list.deinit(gpa); // Try commenting this out and see if zig detects the memory leak!
-    try list.append(gpa, 42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
 }

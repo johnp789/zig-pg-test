@@ -9,7 +9,7 @@ services:
       - "5432:5432"
     user: 1000:1000
     volumes:
-      - ./certs:/var/lib/postgresql/data/certs:ro
+      - ./certs:/var/lib/postgresql/certs:ro
       - ./config/postgresql.conf:/usr/local/share/postgresql/postgresql.conf:ro
       - ./config/pg_hba.conf:/usr/local/share/postgresql/pg_hba.conf:ro
       - ./pgdata:/var/lib/postgresql/data

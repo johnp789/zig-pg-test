@@ -21,20 +21,24 @@ pub const Db = struct {
         errdefer allocator.free(password);
         const host = std.process.getEnvVarOwned(allocator, "PGHOST") catch |err| (if (err == error.EnvironmentVariableNotFound) "127.0.0.1" else return err);
         errdefer allocator.free(host);
+        std.debug.print("Connecting to database at {s} with user 'postgres'\n", .{host});
+        // Segfault happens right after this line.
         const _pool = try pg.Pool.init(allocator, .{
             .size = 5,
             .connect = .{
                 .port = 5432,
                 .host = host,
-                .tls = .{ .verify_full = null },
+                .tls = .require,
+                // .tls = .{ .verify_full = "postgres-test-server/certs/ca.crt" }, // hard-coded path to CA cert
             },
             .auth = .{
                 .username = "postgres",
-                .database = "ameren",
+                .database = "postgres",
                 .password = password,
                 .timeout = 10_000,
             },
         });
+        std.debug.print("Connected to database\n", .{});
         return Db{
             ._allocator = allocator,
             ._pool = _pool,
