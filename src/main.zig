@@ -44,10 +44,8 @@ pub fn main() !void {
             const usage_int = try std.fmt.parseInt(u32, usage, 10);
             const units = it.next() orelse "";
 
-            // print("Service: {s}, Date: {s}, Start: {s}, End: {s}, Usage: {d}, Units: {s}\n", .{ service, date, start_time, end_time, usage_int, units });
-
-            db_pool.insert_record(.{ .service = service, .date = date, .start_time = start_time, .end_time = end_time, .usage = usage_int, .units = units }) catch {
-                print("Failed to insert record into database\n", .{});
+            db_pool.insert_record(.{ .service = service, .date = date, .start_time = start_time, .end_time = end_time, .usage = usage_int, .units = units }) catch |err| {
+                print("Failed to insert record into database: {}\n", .{err});
             };
             continue;
         }

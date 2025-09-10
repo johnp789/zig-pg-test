@@ -1,2 +1,4 @@
 zig-out
 .zig-cache
+postgres-test-server/pgdata/**
+postgres-test-server/certs/**
