@@ -7,7 +7,7 @@ pub const TextFileReader = struct {
     file: std.fs.File,
     reader: std.fs.File.Reader,
 
-    pub fn init(filename: []const u8, allocator: std.mem.Allocator, linebuffer_size: usize) !TextFileReader {
+    pub fn init(allocator: std.mem.Allocator, filename: []const u8, linebuffer_size: usize) !TextFileReader {
         const file = try std.fs.cwd().openFile(filename, .{ .mode = .read_only });
         const buf = try allocator.alloc(u8, linebuffer_size);
         return .{

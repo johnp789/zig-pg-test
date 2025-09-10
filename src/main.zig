@@ -20,7 +20,7 @@ pub fn main() !void {
         return;
     };
 
-    var tr = try TextFileReader.init(file_name, allocator, 1024);
+    var tr = try TextFileReader.init(allocator, file_name, 1024);
     defer tr.deinit();
 
     var db_pool = try db.Db.init(allocator);
