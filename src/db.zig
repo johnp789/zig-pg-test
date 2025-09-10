@@ -28,8 +28,7 @@ pub const Db = struct {
             .connect = .{
                 .port = 5432,
                 .host = host,
-                .tls = .require,
-                // .tls = .{ .verify_full = "postgres-test-server/certs/ca.crt" }, // hard-coded path to CA cert
+                .tls = .{ .verify_full = "postgres-test-server/certs/ca.crt" }, // hard-coded path to CA cert
             },
             .auth = .{
                 .username = "postgres",
